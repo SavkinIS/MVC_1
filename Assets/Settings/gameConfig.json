@@ -1,0 +1,30 @@
+{
+  "widthTile": 20,
+  "lengthTile": 15,
+  "buildingsTypes": [
+    {
+      "nameBuilding": "pilice",
+      "lengthTile": 2,
+      "widthTile": 2,
+      "height": 10,
+      "power": 4
+    },
+    {
+      "nameBuilding": "school",
+      "lengthTile": 4,
+      "widthTile": 4,
+      "height": 15,
+      "power": 6
+    },
+    {
+      "nameBuilding": "dormitory",
+      "lengthTile": 2,
+      "widthTile": 5,
+      "height": 8,
+      "power": 2
+    }
+  ],
+  "tile": {
+    "width": 4
+  }
+}
