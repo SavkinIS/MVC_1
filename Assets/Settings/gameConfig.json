@@ -1,9 +1,9 @@
 {
-  "widthTile": 20,
-  "lengthTile": 15,
+  "widthTile": 320,
+  "lengthTile": 320,
   "buildingsTypes": [
     {
-      "nameBuilding": "pilice",
+      "nameBuilding": "police",
       "lengthTile": 2,
       "widthTile": 2,
       "height": 10,

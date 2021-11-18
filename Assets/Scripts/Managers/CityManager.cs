@@ -1,10 +1,11 @@
 using Assets.Scripts.Controllers;
 using Assets.Scripts.Models;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Мунеджер Города
+/// City Manager
 /// </summary>
 public class CityManager : MonoBehaviour
 {
@@ -24,6 +25,7 @@ public class CityManager : MonoBehaviour
     CityModel cityModel;
     CityController cityController;
     TileController[,] tilesControllers;
+    MeshCombiner meshCombiner;
 
     void Start()
     {        
@@ -34,9 +36,10 @@ public class CityManager : MonoBehaviour
         tileView.transform.localScale = new Vector3(ReadConfigure.TileWidht(), tileView.transform.localScale.y, ReadConfigure.TileWidht());
         boxCollider.size = new Vector3(cityTerritory.transform.localScale.x * 5, boxCollider.size.y, cityTerritory.transform.localScale.z * 5); 
         CreateTiles();
+        meshCombiner  = tileParent.GetComponent<MeshCombiner>();
+        meshCombiner.CombineMeshes(true);
         tileParent.gameObject.SetActive(false);
         EditorChangeOn += SetTileParentActive;
-       
         EditorChangeOff += SetTileParentActive;
     }
 
@@ -49,14 +52,14 @@ public class CityManager : MonoBehaviour
 
     public void EditOn()
     {
-        EditorChangeOn?.Invoke();        
+        EditorChangeOn?.Invoke();
     }
 
     /// <summary>
-    /// Создаём Tiles
+    /// Creating Tiles
     /// </summary>
     /// <returns></returns>
-    TileController[,] CreateTiles()
+    void CreateTiles()
     {
         var width = ReadConfigure.GetCity().widthTile;
         var length = ReadConfigure.GetCity().lengthTile;
@@ -72,10 +75,7 @@ public class CityManager : MonoBehaviour
             for (int j = 0; j < width; j++)
             {
                 var tile = Instantiate(tileView, tileParent);
-                //tile.indexL = i;
-                //tile.indexW = j;
                 tile.transform.localPosition = startPos;
-                //tileView.SetTilesView(NeighborsTiles(i, j));
                 tilesControllers[i, j] = new TileController(tile,new TileModel());
 
                 zPos += tileView.transform.localScale.z;
@@ -86,22 +86,22 @@ public class CityManager : MonoBehaviour
             startPos = new Vector3(xPos, yTilePos, zPos);
         }
 
-        return tilesControllers;
     }
 
     /// <summary>
-    /// Закрыть Режим строительства
+    /// Close Construction Mode
     /// </summary>
     internal void EditClose()
     {
-        EditorChangeOff?.Invoke();
+        StartCoroutine(MeshComb());
     }
 
     /// <summary>
-    /// Включаем/отключаем поле с тайлами
+    /// Enabling/disabling the tile field
     /// </summary>
     public void SetTileParentActive()
     {
+        
         if (tileParent.gameObject.active)
         {
             tileParent.gameObject.SetActive(false);
@@ -114,8 +114,16 @@ public class CityManager : MonoBehaviour
     }
 
 
+    IEnumerator MeshComb()
+    {
+        meshCombiner.CombineMeshes(true);
+        yield return new WaitForSeconds(0.5f);
+        EditorChangeOff?.Invoke();
+    }
+
+
     /// <summary>
-    /// Позиция первого тайла
+    /// Position of the first tile
     /// </summary>
     /// <returns></returns>
     public Vector3 GetFirstTilePos()
@@ -125,11 +133,11 @@ public class CityManager : MonoBehaviour
 
     public delegate void EditorChange();
     /// <summary>
-    /// Режим строительства включён
+    /// Construction mode is enabled
     /// </summary>
     public event EditorChange EditorChangeOn;
     /// <summary>
-    /// Режит строительства выключен
+    /// Construction mode is desabled
     /// </summary>
     public event EditorChange EditorChangeOff;
 

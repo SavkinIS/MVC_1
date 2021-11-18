@@ -10,7 +10,7 @@ public class ReadConfigure
 {
     static CityModel city;
     /// <summary>
-    /// вернет ширину плитки
+    /// returns the width of the tile
     /// </summary>
     /// <returns></returns>
     public static int TileWidht()
@@ -26,12 +26,12 @@ public class ReadConfigure
     }
 
     /// <summary>
-    /// название файла конфигурации
+    /// name of the configuration file
     /// </summary>
     const string gameConfig = "gameConfig.json";
 
     /// <summary>
-    /// Вернет City
+    /// return the City
     /// </summary>
     /// <returns></returns>
     public static CityModel GetCity()
@@ -49,9 +49,9 @@ public class ReadConfigure
 
 
     /// <summary>
-    /// Получает модель города из файла конфигурации 
+    /// Retrieves the city model from the configuration file
     /// </summary>
-    /// <returns>CityModel Модель города</returns>
+    /// <returns>CityModel City model</returns>
     static CityModel ReadConfig()
     {
         string path = Application.dataPath + "/Settings/" + gameConfig;

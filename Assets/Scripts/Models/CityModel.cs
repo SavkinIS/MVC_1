@@ -6,44 +6,44 @@ using System.Collections.Generic;
 public class CityModel
 {
     /// <summary>
-    /// Ширина в тайлах
+    /// Width in tiles
     /// </summary>
     public int widthTile;
     /// <summary>
-    /// длинна в тайлах
+    /// length in tiles
     /// </summary>
     public int lengthTile;
 
     /// <summary>
-    /// Типы зданий
+    /// Types of buildings
     /// </summary>
     public Building[] buildingsTypes;
     /// <summary>
-    /// Тайл
+    /// Tile
     /// </summary>
     public TileModel tile;
 
     /// <summary>
-    /// Список построенных зданий
+    /// List of buildings constructed
     /// </summary>
     List<Building> buildings = new List<Building>();
 
     /// <summary>
-    /// текущая мощь
+    /// current power
     /// </summary>
-    int power = 0; 
+    int power = 0;
 
     /// <summary>
-    /// ширина в единицах измерения
+    /// width in units of measurement
     /// </summary>
     public int Width => widthTile * tile.width;
     /// <summary>
-    /// Длинна в единицах измерения
+    /// Length in units of measurement
     /// </summary>
     public int Length => lengthTile * tile.width;
 
     /// <summary>
-    /// Свойсво Передает спиисок построееных зданий
+    /// The property Transmits a list of constructed buildings
     /// </summary>
     public List<Building> GetBuildings { get => buildings; }
 
@@ -51,7 +51,7 @@ public class CityModel
 
 
     /// <summary>
-    /// Вернет случайный тип здания
+    /// Returns a random building type
     /// </summary>
     /// <returns></returns>
     public Building GetBuilding()
@@ -61,13 +61,13 @@ public class CityModel
     }
 
     /// <summary>
-    /// Сообщает об увеличении Мощи
+    /// Reports an increase in Power
     /// </summary>
     public event Action<int> AddPower;
 
 
     /// <summary>
-    /// Добавляет здание 
+    /// Adds a building
     /// </summary>
     /// <param name="building"></param>
     public void AddBuilding(Building building)

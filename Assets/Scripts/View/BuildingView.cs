@@ -18,8 +18,6 @@ public class BuildingView : MonoBehaviour
     [SerializeField] TMP_Text buildingPower;
     [Tooltip("Компонент привязки к курсору")]
     [SerializeField] MouseFolow mouseFolow;
-    [SerializeField] Transform textPos;
-    [SerializeField] int fontSize;
 
     int power;
     CityManager cityManager;
@@ -28,34 +26,28 @@ public class BuildingView : MonoBehaviour
     /// </summary>
     bool isPlaced;
     /// <summary>
-    /// тайлы которыйе занимает объект
+    /// tiles that the object occupies
     /// </summary>
     List<TileView> tiles = new List<TileView>();
+    List<TileView> tilesAll = new List<TileView>();
     /// <summary>
-    /// логическая площадь
+    /// logical area
     /// </summary>
-    int squear;
-    private Vector2 posGUI;
+    int area;
 
     public bool IsPlaced { get => isPlaced; }
 
     void Start()
     {
-
+        area = Area();
         cityManager = FindObjectOfType<CityManager>();
         boxCollider.size = new Vector3(1, 1, 1);
         tiles = new List<TileView>();
     }
 
 
-    private void Update()
-    {
-        Vector3 screenPosition = Camera.main.WorldToScreenPoint(textPos.transform.position);
-        posGUI = new Vector2(screenPosition.x - 60f, Screen.height - screenPosition.y - 10f);
-    }
-
     /// <summary>
-    /// Устанавливает размер объекта
+    /// Sets the size of the object
     /// </summary>
     /// <param name="x"></param>
     /// <param name="y"></param>
@@ -71,7 +63,7 @@ public class BuildingView : MonoBehaviour
         if (other.TryGetComponent<TileView>(out TileView tile))
         {
             if (isPlaced) tile.SetOccupated(true);
-            else AddToSquer(tile);
+            else AddToArea(tile);
         }
     }
 
@@ -79,48 +71,50 @@ public class BuildingView : MonoBehaviour
     {
         if (other.TryGetComponent<TileView>(out TileView tile))
         {
-            RemoveToSquer(tile);
+            RemoveToArea(tile);
         }
     }
 
     /// <summary>
-    /// Размещение здания
+    /// Building placement
     /// </summary>
     public void Placed()
     {
-        if (Squear() == tiles.Count) TakePlaceOn?.Invoke();
+        if (area == tiles.Count) TakePlaceOn?.Invoke();
     }
 
     /// <summary>
-    /// Добавить тайл к площади объекта
+    /// Add a tile to the area of the object
     /// </summary>
     /// <param name="tile"></param>
-    public void AddToSquer(TileView tile)
+    public void AddToArea(TileView tile)
     {
         if (!tile.GetOccupated)
         {
             tiles.Add(tile);
-            EqualSquear();
         }
 
+        tilesAll.Add(tile);
+        ComparesArea();
     }
     /// <summary>
-    /// Убрать тайл из площади объекта
+    /// Remove tile from the area of the object
     /// </summary>
     /// <param name="tile"></param>
 
-    public void RemoveToSquer(TileView tile)
+    public void RemoveToArea(TileView tile)
     {
         tiles.Remove(tile);
-        EqualSquear();
+        tilesAll.Remove(tile);
+        ComparesArea();
     }
 
     /// <summary>
-    /// Сравнивает фактическую и логическую площать
+    /// Compares the actual and logical area
     /// </summary>
-    private void EqualSquear()
+    private void ComparesArea()
     {
-        if (Squear() == tiles.Count)
+        if (area == tiles.Count && tilesAll.Count == area)
         {
             renderer.material = materialnNormal;
         }
@@ -131,35 +125,58 @@ public class BuildingView : MonoBehaviour
     }
 
     /// <summary>
-    /// логическая площадь
+    /// logical area
     /// </summary>
     /// <returns></returns>
-    int Squear()
+    int Area()
     {
         return Mathf.FloorToInt((transform.localScale.x / ReadConfigure.TileWidht()) * (transform.localScale.z) / ReadConfigure.TileWidht());
     }
 
 
     /// <summary>
-    /// Изменят состояние размещения
+    /// Will change the placement status
     /// </summary>
     /// <param name="value"></param>
     public void SetPlaced(bool value)
     {
 
-        if (Squear() == tiles.Count && !isPlaced)
+        if (area == tiles.Count && !isPlaced && tilesAll.Count == area)
         {
             isPlaced = value;
             cityManager.EditorChangeOn += () => renderer.material = materialEditor;
             cityManager.EditorChangeOff += () => renderer.material = materialnNormal;
             cityManager.EditClose();
             mouseFolow.enabled = false;
-            boxCollider.size = new Vector3(1.1f, 1, 1.1f);
+            boxCollider.size = PercentVector();
         }
 
     }
+
+
     /// <summary>
-    /// Уничтожает объект и отписывается от событий
+    /// Returns a vector proportional to the occupied territory
+    /// </summary>
+    /// <returns></returns>
+    Vector3 PercentVector()
+    {
+        Vector3 vector = new Vector3(1f + Percent(transform.localScale.x), 1, 1f + Percent(transform.localScale.z));
+        return vector;
+    }
+
+    /// <summary>
+    /// part of tile occupy
+    /// </summary>
+    /// <param name="vectorPoint"></param>
+    /// <returns></returns>
+    float Percent(float vectorPoint)
+    {
+        var i = (1 / (vectorPoint / ReadConfigure.TileWidht())) * 2;
+        return i;
+    }
+
+    /// <summary>
+    /// Destroys the object and unsubscribes from events
     /// </summary>
     public void DestroyBuild()
     {
@@ -169,33 +186,23 @@ public class BuildingView : MonoBehaviour
     }
 
     /// <summary>
-    /// Устанавливвает мощность здания
+    /// Sets the capacity of the building
     /// </summary>
     /// <param name="power"></param>
     public void SetPower(int power)
     {
-        //buildingPower.text = power.ToString();
+        buildingPower.text = power.ToString();
         this.power = power;
     }
 
 
     public delegate void TakePlace();
     /// <summary>
-    /// Сообщает что здание установленно
+    /// Notifies that the building has been installed
     /// </summary>
     public event TakePlace TakePlaceOn;
 
 
-    void OnGUI()
-    {
+   
 
-        Rect rect = new Rect(posGUI.x, posGUI.y , 120f, 120f);
-        var style = GUI.skin.label;
-        style.fontSize = fontSize;
-        
-        GUIStyle label = new GUIStyle(style);
-        label.alignment = TextAnchor.UpperCenter;
-
-        GUI.Label(rect, power.ToString(), label);
-    }
 }

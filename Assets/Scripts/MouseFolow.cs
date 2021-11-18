@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// the object moves behind the mouse
+/// </summary>
 public class MouseFolow : MonoBehaviour
 {
     [SerializeField] float distance;

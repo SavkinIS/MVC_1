@@ -10,18 +10,18 @@ public class TileView : MonoBehaviour
     [SerializeField] Renderer renderer;
 
     /// <summary>
-    /// занят ли тайл
+    /// is tile Occupated
     /// </summary>
     bool isOccupated;
 
 
     /// <summary>
-    /// Вернёт свободен ли тайл
+    /// Will return whether the tile is free
     /// </summary>
     public bool GetOccupated => isOccupated;
 
     /// <summary>
-    /// Установит состояние занятоти тайла и изменит на соответствующий цвет
+    /// Set the tile's busy state and change to the appropriate color
     /// </summary>
     /// <param name="flag"></param>
     public void SetOccupated(bool flag)

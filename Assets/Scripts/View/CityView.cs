@@ -10,13 +10,13 @@ public class CityView : MonoBehaviour
     [SerializeField] CityManager cityManager;
     public CityManager GetCityManager => cityManager;
     /// <summary>
-    /// находиться ли в режиме строительства
+    /// is it in construction mode
     /// </summary>
     bool isBuilding;
     public BuildingView BuildingView { get => buildingView; set => buildingView = value; }
     public delegate void BeginBuilding(BuildingView buildingView);
     /// <summary>
-    /// Сообщает об начале строительства
+    /// Informs about the beginning of construction
     /// </summary>
     public event BeginBuilding BuildingON;
 
@@ -26,7 +26,7 @@ public class CityView : MonoBehaviour
         cityPower.text = $"Power: 0";
     }
     /// <summary>
-    /// Инициализирует здание
+    /// Initializes the building
     /// </summary>
     /// <returns></returns>
     BuildingView Build()
@@ -36,7 +36,7 @@ public class CityView : MonoBehaviour
         return build;
     }
     /// <summary>
-    /// Начало строительства
+    /// Start of construction
     /// </summary>
     public void MakeBuilding()
     {
@@ -49,7 +49,7 @@ public class CityView : MonoBehaviour
         //cityManager.EditOn();
     }
     /// <summary>
-    /// Устанавливает Общую мощность города
+    /// Sets the total capacity of the city
     /// </summary>
     /// <param name="power"></param>
     public void SetPower(int power)

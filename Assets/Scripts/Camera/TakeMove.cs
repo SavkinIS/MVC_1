@@ -2,7 +2,7 @@ using UnityEngine;
 
 
 /// <summary>
-/// перетаскивание Карты
+/// dragging the Map
 /// </summary>
 public class TakeMove : MonoBehaviour
 {

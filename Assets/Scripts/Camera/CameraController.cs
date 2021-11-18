@@ -2,7 +2,7 @@ using UnityEngine;
 
 
 /// <summary>
-/// ”правление камерой
+/// Camera Control
 /// </summary>
 public class CameraController : MonoBehaviour
 {
